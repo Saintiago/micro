@@ -1,3 +1,6 @@
 /vendor/
 /logs/
 /.project
+/BackEnd/bin/
+/BackEnd/obj/
+/BackEnd/.vs/
