@@ -4,7 +4,7 @@
   <head></head>
   <body>
     <form method="post" action="<?= Config::URL_FORM_ACTION; ?>">
-      <textarea name="<?= Config::PARAM_NAME; ?>" placeholder="Place your poetry here"></textarea><br />
+      <textarea name="<?= Config::POEM_PARAM_NAME; ?>" placeholder="Place your poetry here"></textarea><br />
       <input type="submit" />
     </form>
   </body>

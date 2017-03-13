@@ -5,12 +5,13 @@ require_once("../include/common.inc.php");
 class Storage
 {
     /**
+     * @param string $key
      * @return string
      */
-    public static function ReadValue()
+    public static function ReadValue($key)
     {
         $client = new Predis\Client();
-        $value = $client->get(Config::PARAM_NAME);
+        $value = $client->get($key);
         return $value;
     }
     
@@ -24,16 +25,16 @@ class Storage
         
         curl_setopt($ch, CURLOPT_URL, Config::API_SET_ADDR);
         
-        curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1:8888');
-        
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
         curl_setopt($ch, CURLOPT_POST, 1 );
         curl_setopt($ch, CURLOPT_POSTFIELDS, self::WrapStringForPost($value));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']); 
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+
+        $server_output = curl_exec ($ch);
+
+        curl_close ($ch);
         
-        curl_exec($ch);
-        
-        return true;
+        return $server_output;
     }
     
     private static function WrapStringForPost($value)

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vowels", "Vowels.csproj", "{FE52C41E-E050-4EBB-B837-52A7FAC6F5E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consonants", "..\Consonants\Consonants.csproj", "{2793010E-9AE2-4C88-93B1-E3B88F4E1A27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RateChecker", "..\RateChecker\RateChecker.csproj", "{B29D13B3-4B17-4260-8AA2-2005C67F105C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE52C41E-E050-4EBB-B837-52A7FAC6F5E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE52C41E-E050-4EBB-B837-52A7FAC6F5E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE52C41E-E050-4EBB-B837-52A7FAC6F5E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE52C41E-E050-4EBB-B837-52A7FAC6F5E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2793010E-9AE2-4C88-93B1-E3B88F4E1A27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2793010E-9AE2-4C88-93B1-E3B88F4E1A27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2793010E-9AE2-4C88-93B1-E3B88F4E1A27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2793010E-9AE2-4C88-93B1-E3B88F4E1A27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B29D13B3-4B17-4260-8AA2-2005C67F105C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B29D13B3-4B17-4260-8AA2-2005C67F105C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B29D13B3-4B17-4260-8AA2-2005C67F105C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B29D13B3-4B17-4260-8AA2-2005C67F105C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

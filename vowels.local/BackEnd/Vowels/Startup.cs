@@ -1,7 +1,7 @@
 ﻿using Owin;
 using System.Web.Http;
 
-namespace BackEnd
+namespace Vowels
 {
     public class Startup
     {

@@ -1,13 +1,15 @@
 <?
-
 require_once("../include/common.inc.php");
 
-// TODO make some kind Request class with escaping and stuff
-if (Storage::WriteValue($_POST[Config::PARAM_NAME]))
+try
 {
-    redirect(Config::URL_RESULT);
+    $request = new Request($_REQUEST);
+    $value = $request->getRequestParam(Config::POEM_PARAM_NAME);
+    validate_string($value);
+    $uid = Storage::WriteValue($value);
+    redirect(Config::URL_RESULT, ['uid' => $uid]);
 }
-else
+catch (Exception $exception)
 {
-    echo 'Can\'t store value.' . "\n";
+    echo $exception->getMessage() . "\n";
 }
