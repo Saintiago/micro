@@ -39,7 +39,7 @@ class Storage
     
     private static function WrapStringForPost($value)
     {
-        return '\'' . $value . '\'';
+        return '\'' . urlencode($value) . '\'';
     }
     
 }

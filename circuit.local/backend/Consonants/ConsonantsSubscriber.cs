@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MassTransit;
+using GreenPipes;
 
-namespace Vowels
+namespace Circuit
 {
     public class ConsonantCounterConsumer : IConsumer<Message>
     {
@@ -48,6 +49,14 @@ namespace Vowels
 
                 cfg.ReceiveEndpoint(host, "consonants_count_queue", e =>
                 {
+                    e.UseCircuitBreaker(cb =>
+                    {
+                        cb.TrackingPeriod = TimeSpan.FromMinutes(1);
+                        cb.TripThreshold = 15;
+                        cb.ActiveThreshold = 10;
+                        cb.ResetInterval = TimeSpan.FromMinutes(5);
+                    });
+
                     e.Consumer<ConsonantCounterConsumer>();
                 });
             });

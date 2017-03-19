@@ -1,9 +1,9 @@
 ﻿using Microsoft.Owin.Hosting;
 using System;
 using System.Net.Http;
-using Vowels;
+using Circuit;
 
-namespace Vowels
+namespace Circuit
 {
     public class Program
     {

@@ -1,14 +1,15 @@
 ﻿using Microsoft.Owin.Hosting;
 using System;
-using System.Net.Http;
+using System.Configuration;
 
-namespace Vowels
+
+namespace Circuit
 {
     public class Program
     {
         static void Main()
         {
-            WebApp.Start<Startup>(url: Config.BASE_ADDRESS);
+            WebApp.Start<Startup>(url: ConfigurationManager.AppSettings["base-address"]);
             Console.WriteLine("Vowels counter process started");
             Console.ReadLine();
         }

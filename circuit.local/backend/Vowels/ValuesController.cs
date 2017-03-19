@@ -2,8 +2,9 @@
 using System.Web.Http;
 using StackExchange.Redis;
 using System;
+using System.Net;
 
-namespace Vowels
+namespace Circuit
 {
     public class ValuesController : ApiController
     {
@@ -28,7 +29,7 @@ namespace Vowels
         // POST api/values 
         public string Post([FromBody]string poem)
         {
-            string[] lines = poem.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            string[] lines = WebUtility.UrlDecode(poem).Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
             string poemId = Guid.NewGuid().ToString();
             CharCounter VowelCounter = new CharCounter(Config.VOWELS);
             int lineIndex = 1;

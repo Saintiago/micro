@@ -1,7 +1,7 @@
 ﻿using Owin;
 using System.Web.Http;
 
-namespace Vowels
+namespace Circuit
 {
     public class Startup
     {

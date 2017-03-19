@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MassTransit;
+using GreenPipes;
 using StackExchange.Redis;
 
-namespace Vowels
+namespace Circuit
 {
     public class RateCheckerConsumer : IConsumer<Message>
     {
@@ -27,8 +28,8 @@ namespace Vowels
 
             string corrId = context.Message.corrId;
             string line = context.Message.Line;
-            int vowelsCount = context.Message.VowelsCount;
-            int consonantsCount = context.Message.ConsonantsCount;
+            double vowelsCount = context.Message.VowelsCount;
+            double consonantsCount = context.Message.ConsonantsCount;
 
             Console.WriteLine(corrId);
             Console.WriteLine(line);
@@ -42,9 +43,14 @@ namespace Vowels
                 db.StringSet(corrId, "");
             }
 
-            if ((vowelsCount / consonantsCount) == Config.VOWELS_CONSONANTS_GOOD_RATE)
+            if (consonantsCount > 0)
             {
-                db.StringAppend(corrId, line + Environment.NewLine);
+                double rate = vowelsCount / consonantsCount;
+                double difference = Math.Abs(Config.VOWELS_CONSONANTS_GOOD_RATE * .001);
+                if (Math.Abs(rate - Config.VOWELS_CONSONANTS_GOOD_RATE) <= difference)
+                {
+                    db.StringAppend(corrId, line + Environment.NewLine);
+                }
             }
         }
     }
@@ -63,6 +69,14 @@ namespace Vowels
 
                 cfg.ReceiveEndpoint(host, "rate_check_queue", e =>
                 {
+                    e.UseCircuitBreaker(cb =>
+                    {
+                        cb.TrackingPeriod = TimeSpan.FromMinutes(1);
+                        cb.TripThreshold = 15;
+                        cb.ActiveThreshold = 10;
+                        cb.ResetInterval = TimeSpan.FromMinutes(5);
+                    });
+
                     e.Consumer<RateCheckerConsumer>();
                 });
             });

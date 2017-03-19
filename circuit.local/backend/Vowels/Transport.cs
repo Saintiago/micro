@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MassTransit;
+using System.Diagnostics;
 
-namespace Vowels
+namespace Circuit
 {
     public enum MessageTarget
     {
@@ -17,8 +18,8 @@ namespace Vowels
     {
         public string corrId { get; set; }
         public string Line { get; set; }
-        public int VowelsCount { get; set; }
-        public int ConsonantsCount { get; set; }
+        public double VowelsCount { get; set; }
+        public double ConsonantsCount { get; set; }
         public MessageTarget Target { get; set; }
 
     }
@@ -45,9 +46,41 @@ namespace Vowels
 
     public class Publisher : Transport
     {
+        private Random rnd = new Random();
+        /**
+         * Retry pattern
+        */
         public void Publish(Message message)
         {
-            busControl.Publish<Message>(message);
+            int currentRetry = 0;
+
+            for (;;)
+            {
+                try
+                {
+                    // Imitating failure with 0.25 chance
+                    if (rnd.Next() < (int.MaxValue / 4))
+                    {
+                        throw new Exception("Retry!");
+                    }
+
+                    busControl.Publish<Message>(message);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("We've got an exception! Retrying...");
+
+                    currentRetry++;
+
+                    if (currentRetry > Config.RETRY_COUNT)
+                    {
+                        throw;
+                    }
+                }
+
+                Task.Delay(Config.DELAY);
+            }
         }
 
         protected override IBusControl ConfigureBus()
