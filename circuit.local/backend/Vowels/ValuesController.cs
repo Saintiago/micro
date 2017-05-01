@@ -1,58 +1,60 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
-using StackExchange.Redis;
 using System;
 using System.Net;
+using System.Linq;
+using PoemUtils;
 
 namespace Circuit
 {
     public class ValuesController : ApiController
     {
-        private ConnectionMultiplexer _redis;
         private Publisher _transport;
+        private CharCounter _vowelsCounter;
 
         public ValuesController()
         {
-            _redis = ConnectionMultiplexer.Connect("localhost");
             _transport = new Publisher();
-        }
-
-        // GET api/values 
-        public string Get()
-        {
-            IDatabase db = _redis.GetDatabase();
-            string value = db.StringGet("poem");
-            Console.WriteLine("Get: " + value);
-            return value;
+            _vowelsCounter = new CharCounter(Config.VOWELS);
         }
 
         // POST api/values 
         public string Post([FromBody]string poem)
         {
-            string[] lines = WebUtility.UrlDecode(poem).Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            string poemId = Guid.NewGuid().ToString();
-            CharCounter VowelCounter = new CharCounter(Config.VOWELS);
-            int lineIndex = 1;
+            poem = WebUtility.UrlDecode(poem);
+            string corrId = Guid.NewGuid().ToString();
+            
+            SendPoemFilteringStartedMessage(corrId, poem);
 
+            List<string> lines = Utils.GetLinesList(poem);
+            int lineIndex = 1;
             foreach (string line in lines)
             {
-                Message msg = new Message();
-                msg.corrId = poemId;
+                ConsonantsMessage msg = new ConsonantsMessage();
+                msg.corrId = corrId;
                 msg.Line = lineIndex + Config.LINE_INDEX_DELIMITER + line;
-                msg.VowelsCount = VowelCounter.Count(line);
-                msg.Target = MessageTarget.Consonants;
+                msg.VowelsCount = _vowelsCounter.Count(line);
+                msg.linesCount = lines.Count();
 
                 Console.WriteLine(msg.corrId);
                 Console.WriteLine(msg.Line);
                 Console.WriteLine(msg.VowelsCount);
                 Console.WriteLine(msg.ConsonantsCount);
-                Console.WriteLine(msg.Target);
+                Console.WriteLine(msg.linesCount);
 
-                _transport.Publish(msg);
+                _transport.GetBus().Publish<ConsonantsMessage>(msg);
                 ++lineIndex;
             }
 
-            return poemId;
+            return corrId;
+        }
+
+        private void SendPoemFilteringStartedMessage(string corrId, string poem)
+        {
+            PoemFilteringStarted msg = new PoemFilteringStarted();
+            msg.corrId = corrId;
+            msg.poem = poem;
+            _transport.GetBus().Publish<PoemFilteringStarted>(msg);
         }
     }
 }

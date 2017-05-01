@@ -3,25 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MassTransit;
 using System.Diagnostics;
+using MassTransit;
 
-namespace Circuit
+namespace PoemUtils
 {
-    public enum MessageTarget
+    public interface IMessage
     {
-        Consonants,
-        RateChecker
+        string corrId { get; set; }
     }
 
-    public class Message
+    public class Message : IMessage
     {
         public string corrId { get; set; }
         public string Line { get; set; }
         public double VowelsCount { get; set; }
         public double ConsonantsCount { get; set; }
-        public MessageTarget Target { get; set; }
+        public int linesCount { get; set; }
+    }
 
+    public class ConsonantsMessage : Message { }
+    public class RateCheckerMessage : Message { }
+
+    public class PoemFilteringStarted : IMessage
+    {
+        public string corrId { get; set; }
+        public string poem { get; set; }
+    }
+
+    public class PoemFilteringCompleted : IMessage
+    {
+        public string corrId { get; set; }
+        public string poemGoodLines { get; set; }
     }
 
     public abstract class Transport
@@ -46,41 +59,9 @@ namespace Circuit
 
     public class Publisher : Transport
     {
-        private Random rnd = new Random();
-        /**
-         * Retry pattern
-        */
-        public void Publish(Message message)
+        public IBusControl GetBus()
         {
-            int currentRetry = 0;
-
-            for (;;)
-            {
-                try
-                {
-                    // Imitating failure with 0.25 chance
-                    if (rnd.Next() < (int.MaxValue / 4))
-                    {
-                        throw new Exception("Retry!");
-                    }
-
-                    busControl.Publish<Message>(message);
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("We've got an exception! Retrying...");
-
-                    currentRetry++;
-
-                    if (currentRetry > Config.RETRY_COUNT)
-                    {
-                        throw;
-                    }
-                }
-
-                Task.Delay(Config.DELAY);
-            }
+            return busControl;
         }
 
         protected override IBusControl ConfigureBus()

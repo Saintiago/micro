@@ -28,7 +28,7 @@ function validate_string($value)
 {
     if (!(is_string($value) && (strlen($value) > 0)))
      {
-         throw new InvalidArgumentException('Value must be not empty string.');
+         throw new InvalidArgumentException('Value must not be empty string.');
      }
 }
 
@@ -38,7 +38,7 @@ function validate_string($value)
  */
 function preparePoem($poem)
 {
-    $lines = explode("\n", $poem);
+    $lines = explode(Config::LINE_SEPARATOR, $poem);
     $indexedLines = [];
     foreach ($lines as &$line)
     {

@@ -5,33 +5,30 @@ using System.Text;
 using System.Threading.Tasks;
 using MassTransit;
 using GreenPipes;
+using PoemUtils;
 
 namespace Circuit
 {
-    public class ConsonantCounterConsumer : IConsumer<Message>
+    public class ConsonantCounterConsumer : IConsumer<ConsonantsMessage>
     {
-        public async Task Consume(ConsumeContext<Message> context)
+        public async Task Consume(ConsumeContext<ConsonantsMessage> context)
         {
-            if (context.Message.Target != MessageTarget.Consonants)
-            {
-                return;
-            }
-
-            Message msg = new Message();
+            RateCheckerMessage msg = new RateCheckerMessage();
             msg.corrId = context.Message.corrId;
             msg.Line = context.Message.Line;
             msg.VowelsCount = context.Message.VowelsCount;
             CharCounter ConsonantCounter = new CharCounter(Config.CONSONANTS);
             msg.ConsonantsCount = ConsonantCounter.Count(context.Message.Line);
-            msg.Target = MessageTarget.RateChecker;
+            msg.linesCount = context.Message.linesCount;
 
             Console.WriteLine(msg.corrId);
             Console.WriteLine(msg.Line);
             Console.WriteLine(msg.VowelsCount);
             Console.WriteLine(msg.ConsonantsCount);
+            Console.WriteLine(msg.linesCount);
 
             Publisher publisher = new Publisher();
-            publisher.Publish(msg);
+            publisher.GetBus().Publish<RateCheckerMessage>(msg);
         }
     }
 
