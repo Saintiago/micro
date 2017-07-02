@@ -37,7 +37,8 @@ namespace Circuit
                     if (!value.IsNull)
                     {
                         goodPoem = value;
-                        db.StringSet(poemKey, goodPoem);
+                        goodPoemCache = new CacheItem(poemKey, value);
+                        _cache.Set(goodPoemCache, new CacheItemPolicy());
                         break;
                     }
 
