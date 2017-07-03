@@ -4,16 +4,13 @@
 /.idea
 /backend/Consonants/.vs/
 /backend/Consonants/packages/
-/backend/Consonants/Properties/
 /backend/Consonants/bin/
 /backend/Consonants/obj/
 /backend/RateChecker/obj/
 /backend/RateChecker/bin/
 /backend/RateChecker/packages/
 /backend/RateChecker/.vs/
-/backend/RateChecker/Properties/
 /backend/Vowels/bin/
-/backend/Vowels/Properties/
 /backend/Vowels/obj/
 /backend/Vowels/.vs/
 /backend/Vowels/packages/
