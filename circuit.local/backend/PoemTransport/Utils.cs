@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace PoemUtils
@@ -18,6 +19,13 @@ namespace PoemUtils
         public static int GetLinesCount(string str)
         {
             return GetLinesList(str).Count();
+        }
+
+        public static byte[] GetHash(char[] buffer)
+        {
+            byte[] sourceBytes = Encoding.Default.GetBytes(buffer);
+            byte[] hashBytes = null;
+            return SHA1Managed.Create().ComputeHash(sourceBytes);
         }
     }
 }
