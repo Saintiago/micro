@@ -25,7 +25,7 @@ class Storage
      * @param string $value 
      * @return bool
      */    
-    public static function WriteValue($value)
+    public static function WriteValues($value)
     {
         $ch = curl_init();
         
@@ -33,7 +33,7 @@ class Storage
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, self::WrapStringForPost($value));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $value);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
         $server_output = curl_exec ($ch);

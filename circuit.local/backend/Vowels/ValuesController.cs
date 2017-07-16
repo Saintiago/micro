@@ -19,9 +19,10 @@ namespace Circuit
         }
 
         // POST api/values 
-        public string Post([FromBody]string poem)
+        public string Post([FromBody]dynamic poemData)
         {
-            poem = WebUtility.UrlDecode(poem);
+            string poem = poemData.poem.Value;
+            int tenant = Convert.ToInt32(poemData.tenant.Value);
             string corrId = Guid.NewGuid().ToString();
             
             SendPoemFilteringStartedMessage(corrId, poem);
@@ -35,12 +36,14 @@ namespace Circuit
                 msg.Line = lineIndex + Config.LINE_INDEX_DELIMITER + line;
                 msg.VowelsCount = _vowelsCounter.Count(line);
                 msg.linesCount = lines.Count();
+                msg.tenant = tenant;
 
                 Console.WriteLine(msg.corrId);
                 Console.WriteLine(msg.Line);
                 Console.WriteLine(msg.VowelsCount);
                 Console.WriteLine(msg.ConsonantsCount);
                 Console.WriteLine(msg.linesCount);
+                Console.WriteLine(msg.tenant);
 
                 _transport.GetBus().Publish<ConsonantsMessage>(msg);
                 ++lineIndex;

@@ -13,6 +13,7 @@ namespace Circuit
     public class RateCheckerConsumer : IConsumer<RateCheckerMessage>
     {
         ObjectCache _cache;
+        public static Object rateCheckerLock = new Object();
 
         public RateCheckerConsumer()
         {
@@ -27,6 +28,7 @@ namespace Circuit
             double vowelsCount = context.Message.VowelsCount;
             double consonantsCount = context.Message.ConsonantsCount;
             int linesCount = context.Message.linesCount;
+            int tenant = context.Message.tenant;
 
             Console.WriteLine(corrId);
             Console.WriteLine(line);
@@ -41,26 +43,33 @@ namespace Circuit
                 double difference = Math.Abs(Config.VOWELS_CONSONANTS_GOOD_RATE * .001);
                 if (Math.Abs(rate - Config.VOWELS_CONSONANTS_GOOD_RATE) <= difference)
                 {
-                    CacheItem goodPoemCache = _cache.GetCacheItem(corrIdTmpKey);
-                    string goodLines = (goodPoemCache != null) ? goodPoemCache.Value.ToString() : "";
-                    goodLines += line + Environment.NewLine;
-                    _cache.Set(new CacheItem(corrIdTmpKey, goodLines), new CacheItemPolicy());
+                    lock (rateCheckerLock)
+                    {
+                        CacheItem goodPoemCache = _cache.GetCacheItem(corrIdTmpKey);
+                        string goodLines = (goodPoemCache != null) ? goodPoemCache.Value.ToString() : "";
+                        goodLines += line + Environment.NewLine;
+                        _cache.Set(new CacheItem(corrIdTmpKey, goodLines), new CacheItemPolicy());
+                    }
                 }
             }
 
-            string corrIdLineCountKey = corrId + Config.LINE_COUNT_CACHE_KEY_POSTFIX;
-            CacheItem linesCountCache = _cache.GetCacheItem(corrIdLineCountKey);
-            int currentLinesCount = (linesCountCache != null) ? (int)linesCountCache.Value : 0;           
-            linesCountCache = new CacheItem(corrIdLineCountKey, ++currentLinesCount);
-            _cache.Set(linesCountCache, new CacheItemPolicy());
-
-            if (currentLinesCount == linesCount)
+            lock (rateCheckerLock)
             {
-                PoemFilteringCompleted msg = new PoemFilteringCompleted();
-                msg.corrId = corrId;
-                msg.poemGoodLines = _cache.GetCacheItem(corrIdTmpKey).Value.ToString();
-                Publisher publisher = new Publisher();
-                publisher.GetBus().Publish<PoemFilteringCompleted>(msg);
+                string corrIdLineCountKey = corrId + Config.LINE_COUNT_CACHE_KEY_POSTFIX;
+                CacheItem linesCountCache = _cache.GetCacheItem(corrIdLineCountKey);
+                int currentLinesCount = (linesCountCache != null) ? (int)linesCountCache.Value : 0;
+                linesCountCache = new CacheItem(corrIdLineCountKey, ++currentLinesCount);
+                _cache.Set(linesCountCache, new CacheItemPolicy());
+
+                if (currentLinesCount == linesCount)
+                {
+                    PoemFilteringCompleted msg = new PoemFilteringCompleted();
+                    msg.corrId = corrId;
+                    msg.poemGoodLines = _cache.GetCacheItem(corrIdTmpKey).Value.ToString();
+                    msg.tenant = tenant;
+                    Publisher publisher = new Publisher();
+                    publisher.GetBus().Publish<PoemFilteringCompleted>(msg);
+                }
             }
 
         }

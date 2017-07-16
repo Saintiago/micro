@@ -20,12 +20,14 @@ namespace Circuit
             CharCounter ConsonantCounter = new CharCounter(Config.CONSONANTS);
             msg.ConsonantsCount = ConsonantCounter.Count(context.Message.Line);
             msg.linesCount = context.Message.linesCount;
+            msg.tenant = context.Message.tenant;
 
             Console.WriteLine(msg.corrId);
             Console.WriteLine(msg.Line);
             Console.WriteLine(msg.VowelsCount);
             Console.WriteLine(msg.ConsonantsCount);
             Console.WriteLine(msg.linesCount);
+            Console.WriteLine(msg.tenant);
 
             Publisher publisher = new Publisher();
             publisher.GetBus().Publish<RateCheckerMessage>(msg);

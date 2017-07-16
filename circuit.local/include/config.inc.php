@@ -3,6 +3,7 @@
 class Config
 {
     const POEM_PARAM_NAME      = 'poem';
+    const TENANT_PARAM_NAME    = 'tenant';
     const UID_PARAM_NAME       = 'uid';
     const API_SET_ADDR         = 'http://localhost:8091/api/values';
     const API_GET_ADDR         = 'http://localhost:8092/api/goodpoem';

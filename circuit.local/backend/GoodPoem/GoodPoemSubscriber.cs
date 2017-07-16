@@ -23,9 +23,11 @@ namespace Circuit
         {
             string corrId = context.Message.corrId;
             string poemGoodLines = context.Message.poemGoodLines;
+            int tenant = context.Message.tenant;
 
             Console.WriteLine(corrId);
             Console.WriteLine(poemGoodLines);
+            Console.WriteLine(tenant);
 
             _cache.Set(new CacheItem(corrId, poemGoodLines), new CacheItemPolicy());
 

@@ -1,10 +1,10 @@
 <? require_once('../include/common.inc.php'); ?>
 <!DOCTYPE html>
 <html>
-  <head></head>
-  <body>
-    <form method="post" enctype="application/x-www-form-urlencoded" action="<?= Config::URL_FORM_ACTION; ?>">
-      <textarea rows="30" cols="60" name="<?= Config::POEM_PARAM_NAME; ?>" placeholder="Place your poetry here">
+<head></head>
+<body>
+<form method="post" enctype="application/x-www-form-urlencoded" action="<?= Config::URL_FORM_ACTION; ?>">
+    <textarea rows="30" cols="60" name="<?= Config::POEM_PARAM_NAME; ?>" placeholder="Place your poetry here">
 From fairest creatures we desire increase,
 That thereby beauty's rose might never die,
 But as the riper should by time decease,
@@ -19,8 +19,12 @@ Within thine own bud buriest thy content
 And, tender churl, makest waste in niggarding.
 Pity the world, or else this glutton be,
 To eat the world's due, by the grave and thee.
-      </textarea><br />
-      <input type="submit" />
-    </form>
-  </body>
+    </textarea><br/>
+    <select name="<?= Config::TENANT_PARAM_NAME; ?>">
+        <option value="1">User 1</option>
+        <option value="2">User 2</option>
+    </select>
+    <input type="submit"/>
+</form>
+</body>
 </html>

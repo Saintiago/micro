@@ -20,6 +20,7 @@ namespace PoemUtils
         public double VowelsCount { get; set; }
         public double ConsonantsCount { get; set; }
         public int linesCount { get; set; }
+        public int tenant { get; set; }
     }
 
     public class ConsonantsMessage : Message { }
@@ -35,6 +36,7 @@ namespace PoemUtils
     {
         public string corrId { get; set; }
         public string poemGoodLines { get; set; }
+        public int tenant { get; set; }
     }
 
     public abstract class Transport

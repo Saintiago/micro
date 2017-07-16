@@ -21,15 +21,30 @@ function redirect($url, $params = [])
 }
 
 /**
- * @param $value
- * @return bool
+ * @param $poem
+ * @return string
  */
-function validate_string($value)
+function validate_string($poem)
 {
-    if (!(is_string($value) && (strlen($value) > 0)))
-     {
-         throw new InvalidArgumentException('Value must not be empty string.');
-     }
+    if (!(is_string($poem) && (strlen($poem) > 0)))
+    {
+        throw new InvalidArgumentException('Poem must not be empty string.');
+    }
+    return $poem;
+}
+
+/**
+ * @param $tenant
+ * @return int
+ */
+function validate_integer($tenant)
+{
+    $tenant = (int)$tenant;
+    if ($tenant <= 0)
+    {
+        throw new InvalidArgumentException('Tenant must be integer > 0.');
+    }
+    return $tenant;
 }
 
 /**
