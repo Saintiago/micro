@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
-using StackExchange.Redis;
 using System;
 using System.Runtime.Caching;
 using PoemUtils;
@@ -10,16 +9,15 @@ namespace Circuit
 {
     public class GoodPoemController : ApiController
     {
-        private ConnectionMultiplexer _redis;
         ObjectCache _cache;
 
         public GoodPoemController()
         {
-            _redis = ConnectionMultiplexer.Connect("localhost");
             _cache = MemoryCache.Default;
         }
-        // GET api/goodpoem/{poemKey} 
-        public string Get(string poemKey)
+
+        // GET api/goodpoem/?tenant={tenant}&poemKey={poemKey} 
+        public string Get(int tenant = 0, string poemKey = null)
         {
             string goodPoem = "";
             CacheItem goodPoemCache = _cache.GetCacheItem(poemKey);
@@ -29,12 +27,11 @@ namespace Circuit
             }
             else
             {
-                IDatabase db = _redis.GetDatabase();
                 int triesCount = 0;
                 while (triesCount < (Config.SERVICE_TIMEOUT / 1000))
                 {
-                    var value = db.StringGet(poemKey);
-                    if (!value.IsNull)
+                    var value = Sharding.GetInstance().Read(tenant, poemKey);
+                    if (!String.IsNullOrEmpty(value))
                     {
                         goodPoem = value;
                         goodPoemCache = new CacheItem(poemKey, value);

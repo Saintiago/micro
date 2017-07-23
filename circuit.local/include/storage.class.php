@@ -14,11 +14,12 @@ class Storage
 
     /**
      * @param string $key
+     * @param int $tenant
      * @return string
      */
-    public static function ReadValue($key)
+    public static function ReadValue($key, $tenant)
     {
-        return self::MakeGetRequest(Config::API_GET_ADDR . '/' . $key);
+        return self::MakeGetRequest(Config::API_GET_ADDR . '?tenant='. $tenant . '&poemKey='. $key);
     }
     
     /**

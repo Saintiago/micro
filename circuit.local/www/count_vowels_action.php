@@ -12,7 +12,7 @@ try
     ];
     $dataString = json_encode($data);
     $uid = Storage::WriteValues($dataString);
-    redirect(Config::URL_RESULT, ['uid' => $uid]);
+    redirect(Config::URL_RESULT, ['uid' => $uid, 'tenant' => $tenant]);
 }
 catch (Exception $exception)
 {

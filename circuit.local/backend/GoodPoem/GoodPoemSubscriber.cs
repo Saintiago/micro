@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MassTransit;
 using GreenPipes;
-using StackExchange.Redis;
 using System.Runtime.Caching;
 using PoemUtils;
 
@@ -10,12 +9,10 @@ namespace Circuit
 {
     public class GoodPoemConsumer : IConsumer<PoemFilteringCompleted>
     {
-        private ConnectionMultiplexer _redis;
         ObjectCache _cache;
 
         public GoodPoemConsumer()
         {
-            _redis = ConnectionMultiplexer.Connect("localhost");
             _cache = MemoryCache.Default;
         }
 
@@ -31,8 +28,7 @@ namespace Circuit
 
             _cache.Set(new CacheItem(corrId, poemGoodLines), new CacheItemPolicy());
 
-            IDatabase db = _redis.GetDatabase();
-            db.StringSet(corrId, poemGoodLines);
+            Sharding.GetInstance().Write(tenant, corrId, poemGoodLines);
         }
     }
 

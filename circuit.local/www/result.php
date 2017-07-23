@@ -3,6 +3,7 @@
 require_once("../include/common.inc.php");
 
 $request = new Request($_REQUEST);
+$tenant = $request->getRequestParam(Config::TENANT_PARAM_NAME);
 $uid = $request->getRequestParam(Config::UID_PARAM_NAME);
 
 ?>
@@ -15,5 +16,6 @@ $uid = $request->getRequestParam(Config::UID_PARAM_NAME);
     <body>
         <div class="result_container" id="result"></div>
         <input type="hidden" id="uid" value="<?= trim($uid, '"'); ?>" />
+        <input type="hidden" id="tenant" value="<?= trim($tenant, '"'); ?>" />
     </body>
 </html>
