@@ -23,6 +23,8 @@ To eat the world's due, by the grave and thee.
     <select name="<?= Config::TENANT_PARAM_NAME; ?>">
         <option value="1">User 1</option>
         <option value="2">User 2</option>
+        <option value="3">User 3</option>
+        <option value="4">User 4</option>
     </select>
     <input type="submit"/>
 </form>

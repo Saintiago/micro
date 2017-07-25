@@ -20,5 +20,11 @@ namespace PoemUtils
         {
             return GetLinesList(str).Count();
         }
+
+        public static byte[] GetHash(int number)
+        {
+            byte[] sourceBytes = BitConverter.GetBytes(number);
+            return SHA1Managed.Create().ComputeHash(sourceBytes);
+        }
     }
 }

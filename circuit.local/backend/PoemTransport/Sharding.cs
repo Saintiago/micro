@@ -55,7 +55,9 @@ namespace PoemUtils
 
         private int GetCode(int tenantId)
         {
-            return tenantId.GetHashCode() & 0xFF;
+            byte[] hash = Utils.GetHash(tenantId);
+            int firstBit = (hash[0] & 0b10000000) == 0 ? 0 : 1;
+            return firstBit;
         }
 
         private ConnectionMultiplexer GetShardInstance(string name)
