@@ -21,6 +21,10 @@ namespace PoemUtils
             return GetLinesList(str).Count();
         }
 
+        /**
+         * Using SHA-1 because it does not have trivial biases
+         * (http://oldblog.antirez.com/post/redis-presharding.html)
+         */
         public static byte[] GetHash(int number)
         {
             byte[] sourceBytes = BitConverter.GetBytes(number);

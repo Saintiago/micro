@@ -56,7 +56,7 @@ namespace PoemUtils
         private int GetCode(int tenantId)
         {
             byte[] hash = Utils.GetHash(tenantId);
-            int firstBit = (hash[0] & 0b10000000) == 0 ? 0 : 1;
+            int firstBit = (hash[0] & 0b00000001) == 0 ? 0 : 1;
             return firstBit;
         }
 
